@@ -1,0 +1,138 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <p-toast></p-toast>
+            <p-toolbar styleClass="mb-4">
+                <ng-template pTemplate="left">
+                    <div class="my-2">
+                        <button pButton pRipple label="Nuevo" icon="pi pi-plus" class="p-button-success mr-2"
+                            (click)="openNew()"></button>
+                    </div>
+                </ng-template>
+
+                <ng-template pTemplate="right">
+                    <button pButton pRipple label="Exportar" icon="pi pi-upload" class="p-button-help"
+                        (click)="dt.exportCSV()"></button>
+                </ng-template>
+            </p-toolbar>
+
+            <p-table #dt [value]="users" [columns]="cols" responsiveLayout="scroll" [rows]="10"
+                [globalFilterFields]="['usr_first_name','usr_second_name','usr_first_lastname','usr_second_lastname','usr_full_name','usr_user','usr_email','usr_state']"
+                [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true"
+                currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+                [(selection)]="selectedUsers" selectionMode="multiple" [rowHover]="true" dataKey="usr_id">
+                <ng-template pTemplate="caption">
+                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                        <h5 class="m-0">Usuarios</h5>
+                        <span class="block mt-2 md:mt-0 p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Buscar..."
+                                class="w-full sm:w-auto" />
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th pSortableColumn="usr_id">ID <p-sortIcon field="usr_id"></p-sortIcon></th>
+                        <th pSortableColumn="usr_full_name">Nombre Completo <p-sortIcon
+                                field="usr_full_name"></p-sortIcon></th>
+                        <th pSortableColumn="usr_user">Nombre de Usuario <p-sortIcon field="usr_user"></p-sortIcon></th>
+                        <th pSortableColumn="usr_email">Email <p-sortIcon field="usr_email"></p-sortIcon></th>
+                        <th pSortableColumn="usr_state">Estado <p-sortIcon field="usr_state"></p-sortIcon></th>
+                        <th>Acciones</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-user>
+                    <tr>
+                        <td><span class="p-column-title">ID</span>{{user.usr_id}}</td>
+                        <td><span class="p-column-title">Nombre Completo</span>{{user.usr_full_name}}</td>
+                        <td><span class="p-column-title">Nombre de Usuario</span>{{user.usr_user}}</td>
+                        <td><span class="p-column-title">Email</span>{{user.usr_email}}</td>
+                        <td><span class="p-column-title">Estado</span>{{user.usr_state}}</td>
+                        <td>
+                            <div class="flex">
+                                <button pButton pRipple icon="pi pi-pencil"
+                                    class="p-button-rounded p-button-success mr-2" (click)="editUser(user)"></button>
+                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
+                                    (click)="deleteUser(user)"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+
+        <p-dialog [(visible)]="userDialog" [style]="{width: '450px'}" header="Detalles del Usuario" [modal]="true"
+            class="p-fluid">
+            <ng-template pTemplate="content">
+                <div class="field">
+                    <label for="usr_first_name">Primer Nombre</label>
+                    <input type="text" pInputText id="usr_first_name" [(ngModel)]="user.usr_first_name" required
+                        autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !user.usr_first_name}" />
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !user.usr_first_name">Primer Nombre es
+                        requerido.</small>
+                </div>
+                <div class="field">
+                    <label for="usr_second_name">Segundo Nombre</label>
+                    <input type="text" pInputText id="usr_second_name" [(ngModel)]="user.usr_second_name" />
+                </div>
+                <div class="field">
+                    <label for="usr_first_lastname">Primer Apellido</label>
+                    <input type="text" pInputText id="usr_first_lastname" [(ngModel)]="user.usr_first_lastname" required
+                        [ngClass]="{'ng-invalid ng-dirty' : submitted && !user.usr_first_lastname}" />
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !user.usr_first_lastname">Primer Apellido es
+                        requerido.</small>
+                </div>
+                <div class="field">
+                    <label for="usr_second_lastname">Segundo Apellido</label>
+                    <input type="text" pInputText id="usr_second_lastname" [(ngModel)]="user.usr_second_lastname" />
+                </div>
+                <div class="field">
+                    <label for="usr_full_name">Nombre Completo</label>
+                    <input type="text" pInputText id="usr_full_name" [(ngModel)]="user.usr_full_name" />
+                </div>
+                <div class="field">
+                    <label for="usr_user">Nombre de Usuario</label>
+                    <input type="text" pInputText id="usr_user" [(ngModel)]="user.usr_user" required
+                        [ngClass]="{'ng-invalid ng-dirty' : submitted && !user.usr_user}" />
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !user.usr_user">Nombre de Usuario es
+                        requerido.</small>
+                </div>
+                <div class="field">
+                    <label for="usr_email">Email</label>
+                    <input type="text" pInputText id="usr_email" [(ngModel)]="user.usr_email" required
+                        [ngClass]="{'ng-invalid ng-dirty' : submitted && !user.usr_email}" />
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !user.usr_email">Email es requerido.</small>
+                </div>
+                <div class="field">
+                    <label for="usr_password">Contraseña</label>
+                    <input type="password" pInputText id="usr_password" [(ngModel)]="user.usr_password" required
+                        [ngClass]="{'ng-invalid ng-dirty' : submitted && !user.usr_password}" />
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !user.usr_password">Contraseña es
+                        requerida.</small>
+                </div>
+                <div class="field">
+                    <label for="usr_state">Estado</label>
+                    <input type="text" pInputText id="usr_state" [(ngModel)]="user.usr_state" />
+                </div>
+            </ng-template>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text"
+                    (click)="hideDialog()"></button>
+                <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text"
+                    (click)="saveUser()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="deleteUserDialog" header="Confirmar" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span *ngIf="user">¿Está seguro de que desea eliminar a <b>{{user.usr_full_name}}</b>?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="deleteUserDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Sí" (click)="confirmDelete()"></button>
+            </ng-template>
+        </p-dialog>
+    </div>
+</div>

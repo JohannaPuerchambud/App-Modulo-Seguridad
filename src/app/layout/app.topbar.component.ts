@@ -10,6 +10,8 @@ export class AppTopBarComponent {
 
     items!: MenuItem[];
 
+    isAuthMenuVisible = false;
+
     @ViewChild('menubutton') menuButton!: ElementRef;
 
     @ViewChild('topbarmenubutton') topbarMenuButton!: ElementRef;
@@ -17,4 +19,8 @@ export class AppTopBarComponent {
     @ViewChild('topbarmenu') menu!: ElementRef;
 
     constructor(public layoutService: LayoutService) { }
+
+    toggleAuthMenu() {
+        this.isAuthMenuVisible = !this.isAuthMenuVisible;
+    }
 }
