@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { FunctionsRoutingModule } from './functions-routing.module';
-import { FunctionsComponent } from './functions.component';
+import { FuncionesRoutingModule } from './funciones-routing.module';
+import { FuncionesComponent } from './funciones.component';
 import { TableModule } from 'primeng/table';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ButtonModule } from 'primeng/button';
@@ -20,7 +20,7 @@ import { DialogModule } from 'primeng/dialog';
 @NgModule({
     imports: [
         CommonModule,
-        FunctionsRoutingModule,
+        FuncionesRoutingModule,
         TableModule,
         FileUploadModule,
         FormsModule,
@@ -34,8 +34,8 @@ import { DialogModule } from 'primeng/dialog';
         DropdownModule,
         RadioButtonModule,
         InputNumberModule,
-        DialogModule
+        DialogModule,
     ],
-    declarations: [FunctionsComponent]
+    declarations: [FuncionesComponent]
 }) 
-export class FunctionsModule { }
+export class FuncionesModule { }

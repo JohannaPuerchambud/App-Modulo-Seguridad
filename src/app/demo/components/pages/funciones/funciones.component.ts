@@ -1,14 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { F } from '@fullcalendar/core/internal-common';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { FuncionesApiService } from 'src/app/demo/components/pages/service/funciones.service';
 
 @Component({
-    templateUrl: './functions.component.html',
+    templateUrl: './funciones.component.html',
     providers: [MessageService]
 })
-export class FunctionsComponent implements OnInit {
+export class FuncionesComponent implements OnInit {
 
     functionDialog: boolean = false;
     deleteFunctionDialog: boolean = false;
@@ -21,7 +20,7 @@ export class FunctionsComponent implements OnInit {
 
     cols: any[] = [
         { field: 'func_id', header: 'ID' },
-        { field: 'func_name', header: 'Nombre de la Función' },
+        { field: 'func_name', header: 'Nombre' },
         { field: 'func_module', header: 'Módulo' },
         { field: 'func_state', header: 'Estado' }
     ];
@@ -33,33 +32,23 @@ export class FunctionsComponent implements OnInit {
 
     rowsPerPageOptions = [5, 10, 20];
 
-    constructor(private functionsApiService: FuncionesApiService, private messageService: MessageService) { }
+    constructor(private funcionesApiService: FuncionesApiService, private messageService: MessageService) { }
 
     ngOnInit() {
-        this.getFunctions();
-        this.getHoy();
+        this.getFunciones();
     }
 
-    
-    
-
-    getFunctions() {
-        this.functionsApiService.getFunciones().subscribe(
+    getFunciones() {
+        this.funcionesApiService.getFunciones().subscribe(
             (data: any) => {
-                this.functions = data.functions; // Ensure 'data.functions' contains the array of functions
+                console.log('Datos recibidos: ', data); // Añadido para depuración
+                this.functions = data.functions; // Asegúrate de que 'data.functions' contiene el array de funciones
             },
             (error: any) => {
                 console.error('Error fetching functions: ', error);
             }
         );
     }
-
-    getHoy (){
-    this.functionsApiService.getFunciones().subscribe(
-      (res:any)=>{console.log(res)},
-      (error:any)=> {console.log(error)});
-    
-  }
 
     openNew() {
         this.func = {};
@@ -84,14 +73,14 @@ export class FunctionsComponent implements OnInit {
     confirmDeleteSelected() {
         this.deleteFunctionsDialog = false;
         this.functions = this.functions.filter(val => !this.selectedFunctions.includes(val));
-        this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Funciones Eliminadas', life: 3000 });
+        this.messageService.add({ severity: 'success', summary: 'Exitoso', detail: 'Funciones Eliminadas', life: 3000 });
         this.selectedFunctions = [];
     }
 
     confirmDelete() {
         this.deleteFunctionDialog = false;
         this.functions = this.functions.filter(val => val.func_id !== this.func.func_id);
-        this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Función Eliminada', life: 3000 });
+        this.messageService.add({ severity: 'success', summary: 'Exitoso', detail: 'Función Eliminada', life: 3000 });
         this.func = {};
     }
 
@@ -103,17 +92,17 @@ export class FunctionsComponent implements OnInit {
     saveFunction() {
         this.submitted = true;
 
-        if (this.func.func_name?.trim() && this.func.func_module && this.func.func_state) {
+        if (this.func.func_name?.trim() && this.func.func_module?.trim() && this.func.func_state?.trim()) {
             if (this.func.func_id) {
                 const index = this.findIndexById(this.func.func_id);
                 if (index !== -1) {
                     this.functions[index] = this.func;
-                    this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Función Actualizada', life: 3000 });
+                    this.messageService.add({ severity: 'success', summary: 'Exitoso', detail: 'Función Actualizada', life: 3000 });
                 }
             } else {
                 this.func.func_id = this.createId();
                 this.functions.push(this.func);
-                this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Función Creada', life: 3000 });
+                this.messageService.add({ severity: 'success', summary: 'Exitoso', detail: 'Función Creada', life: 3000 });
             }
 
             this.functions = [...this.functions];
@@ -122,12 +111,17 @@ export class FunctionsComponent implements OnInit {
         }
     }
 
-    findIndexById(id: number): number {
+    findIndexById(id: string): number {
         return this.functions.findIndex(func => func.func_id === id);
     }
 
-    createId(): number {
-        return Math.floor(Math.random() * 1000); // Example random ID generation
+    createId(): string {
+        let id = '';
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        for (let i = 0; i < 5; i++) {
+            id += chars.charAt(Math.random() * chars.length);
+        }
+        return id;
     }
 
     onGlobalFilter(table: Table, event: Event) {

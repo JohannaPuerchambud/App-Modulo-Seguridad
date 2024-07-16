@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
+import { LoginApiService } from 'src/app/demo/components/auth/service/login.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-login',
@@ -13,18 +15,41 @@ import { LayoutService } from 'src/app/layout/service/app.layout.service';
         }
     `]
 })
-export class LoginComponent {
-
+export class LoginComponent implements OnInit {
     valCheck: string[] = ['remember'];
-    password!: string;
-    selectedModule: any;
-    modules: any[];
+    username: string = '';
+    password: string = '';
+    selectedModule: string = '';
 
-    constructor(public layoutService: LayoutService) {
-        this.modules = [
-            { label: 'Módulo 1', value: 'modulo1' },
-            { label: 'Módulo 2', value: 'modulo2' },
-            { label: 'Módulo 3', value: 'modulo3' }
-        ];
+    constructor(
+        public layoutService: LayoutService, 
+        private loginService: LoginApiService, 
+        private router: Router  // Añadir el Router aquí
+    ) { }
+
+    ngOnInit() {
+        // No se necesita cargar los módulos desde el servicio
+    }
+
+    login() {
+        console.log('username:', this.username);
+        console.log('password:', this.password);
+        console.log('selectedModule:', this.selectedModule);
+
+        if (this.username && this.password && this.selectedModule) {
+            this.loginService.login(this.username, this.password, this.selectedModule).subscribe(
+                response => {
+                    console.log('Login successful', response);
+                    // Redirige al usuario después del login exitoso
+                    this.router.navigate(['/app']); // Redirige al layout principal
+                },
+                error => {
+                    console.error('Login failed', error);
+                    // Maneja los errores aquí
+                }
+            );
+        } else {
+            console.error('Por favor, rellene todos los campos');
+        }
     }
 }

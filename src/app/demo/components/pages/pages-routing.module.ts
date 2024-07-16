@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
     imports: [RouterModule.forChild([
         { path: 'users', loadChildren: () => import('./users/users.module').then(m => m.UsersModule) },
         { path: 'roles', loadChildren: () => import('./roles/roles.module').then(m => m.RolesModule) }, 
-        { path: 'functions', loadChildren: () => import('./functions/functions.module').then(m => m.FunctionsModule) }, 
+        { path: 'functions', loadChildren: () => import('./funciones/funciones.module').then(m => m.FuncionesModule) }, 
         { path: 'modules', loadChildren: () => import('./modules/modules.module').then(m => m.ModulesModule) }, 
         { path: 'audit', loadChildren: () => import('./audit/audit.module').then(m => m.AuditModule) }, 
         { path: '**', redirectTo: '/notfound' }

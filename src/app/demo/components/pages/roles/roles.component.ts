@@ -18,7 +18,7 @@ export class RolesComponent implements OnInit {
     selectedRoles: any[] = [];
     submitted: boolean = false;
 
-    cols: any[] = [
+    cols: any[] = [ 
         { field: 'rol_id', header: 'ID' },
         { field: 'rol_role', header: 'Rol' },
         { field: 'rol_description', header: 'Descripción' },

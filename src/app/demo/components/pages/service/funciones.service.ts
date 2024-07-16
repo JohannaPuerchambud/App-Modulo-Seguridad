@@ -10,9 +10,8 @@ export class FuncionesApiService {
 
   url: string = 'https://api-modulo-seguridad.onrender.com';
 
-  constructor(private api: HttpClient) {
+  constructor(private api: HttpClient) {}
 
-  }
   getFunciones(): Observable<any> {
     return this.api.get(this.url + "/api/functions");
   }

@@ -17,8 +17,9 @@
             </p-toolbar>
 
             <p-table #dt [value]="functions" [columns]="cols" responsiveLayout="scroll" [rows]="10"
-                [globalFilterFields]="['func_name', 'func_state']" [paginator]="true" [rowsPerPageOptions]="rowsPerPageOptions"
-                [showCurrentPageReport]="true" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+                [globalFilterFields]="['func_name', 'func_module', 'func_state']" [paginator]="true"
+                [rowsPerPageOptions]="rowsPerPageOptions" [showCurrentPageReport]="true"
+                currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
                 [(selection)]="selectedFunctions" selectionMode="multiple" [rowHover]="true" dataKey="func_id">
                 <ng-template pTemplate="caption">
                     <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
@@ -48,7 +49,8 @@
                         <td>
                             <div class="flex">
                                 <button pButton pRipple icon="pi pi-pencil"
-                                    class="p-button-rounded p-button-success mr-2" (click)="editFunction(func)"></button>
+                                    class="p-button-rounded p-button-success mr-2"
+                                    (click)="editFunction(func)"></button>
                                 <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
                                     (click)="deleteFunction(func)"></button>
                             </div>
@@ -61,23 +63,7 @@
         <p-dialog [(visible)]="functionDialog" [style]="{width: '450px'}" header="Detalles de la Función" [modal]="true"
             class="p-fluid">
             <ng-template pTemplate="content">
-                <div class="field">
-                    <label for="func_name">Nombre</label>
-                    <input type="text" pInputText id="func_name" [(ngModel)]="function.func_name" required
-                        autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !function.func_name}" />
-                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !function.func_name">Nombre es requerido.</small>
-                </div>
-                <div class="field">
-                    <label for="func_module">Módulo</label>
-                    <p-dropdown [options]="modules" [(ngModel)]="function.func_module" optionLabel="mod_name" optionValue="mod_id"
-                        placeholder="Seleccionar Módulo" [disabled]="false"></p-dropdown>
-                </div>
-                <div class="field">
-                    <label for="func_state">Estado</label>
-                    <input type="text" pInputText id="func_state" [(ngModel)]="function.func_state" required
-                        [ngClass]="{'ng-invalid ng-dirty' : submitted && !function.func_state}" />
-                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !function.func_state">Estado es requerido.</small>
-                </div>
+                <!-- Aquí van los campos de edición de la función -->
             </ng-template>
             <ng-template pTemplate="footer">
                 <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text"
@@ -90,12 +76,13 @@
         <p-dialog [(visible)]="deleteFunctionDialog" header="Confirmar" [modal]="true" [style]="{width:'450px'}">
             <div class="flex align-items-center justify-content-center">
                 <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
-                <span *ngIf="functions">¿Está seguro de que desea eliminar la función <b>{{function.func_name}}</b>?</span>
+                <span *ngIf="func">¿Está seguro de que desea eliminar la función <b>{{func.func_name}}</b>?</span>
             </div>
             <ng-template pTemplate="footer">
                 <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
                     (click)="deleteFunctionDialog = false"></button>
-                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Sí" (click)="confirmDelete()"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Sí"
+                    (click)="confirmDelete()"></button>
             </ng-template>
         </p-dialog>
     </div>
