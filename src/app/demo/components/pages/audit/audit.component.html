@@ -1,0 +1,120 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <p-toast></p-toast>
+            <p-toolbar styleClass="mb-4">
+                <ng-template pTemplate="left">
+                    <div class="my-2">
+                        <button pButton pRipple label="Exportar" icon="pi pi-upload" class="p-button-help"
+                            (click)="dt.exportCSV()"></button>
+                    </div>
+                </ng-template>
+
+                <ng-template pTemplate="right">
+
+                </ng-template>
+            </p-toolbar>
+
+            <p-table #dt [value]="audits" [columns]="cols" responsiveLayout="scroll" [rows]="10"
+                [globalFilterFields]="['aud_id','aud_usuario','aud_fecha','aud_accion','aud_modulo','aud_funcionalidad','aud_observacion']"
+                [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true"
+                currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+                [(selection)]="selectedAudits" selectionMode="multiple" [rowHover]="true" dataKey="aud_id">
+                <ng-template pTemplate="caption">
+                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                        <h5 class="m-0">Auditoría</h5>
+                        <span class="block mt-2 md:mt-0 p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Buscar..."
+                                class="w-full sm:w-auto" />
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th pSortableColumn="aud_id">ID <p-sortIcon field="aud_id"></p-sortIcon></th>
+                        <th pSortableColumn="aud_usuario">Usuario <p-sortIcon field="aud_usuario"></p-sortIcon></th>
+                        <th pSortableColumn="aud_fecha">Fecha <p-sortIcon field="aud_fecha"></p-sortIcon></th>
+                        <th pSortableColumn="aud_accion">Acción <p-sortIcon field="aud_accion"></p-sortIcon></th>
+                        <th pSortableColumn="aud_modulo">Módulo <p-sortIcon field="aud_modulo"></p-sortIcon></th>
+                        <th pSortableColumn="aud_funcionalidad">Funcionalidad <p-sortIcon
+                                field="aud_funcionalidad"></p-sortIcon></th>
+                        <th pSortableColumn="aud_observacion">Observación <p-sortIcon
+                                field="aud_observacion"></p-sortIcon></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-audit>
+                    <tr>
+                        <td><span class="p-column-title">ID</span>{{audit.aud_id}}</td>
+                        <td><span class="p-column-title">Usuario</span>{{audit.aud_usuario}}</td>
+                        <td><span class="p-column-title">Fecha</span>{{audit.aud_fecha}}</td>
+                        <td><span class="p-column-title">Acción</span>{{audit.aud_accion}}</td>
+                        <td><span class="p-column-title">Módulo</span>{{audit.aud_modulo}}</td>
+                        <td><span class="p-column-title">Funcionalidad</span>{{audit.aud_funcionalidad}}</td>
+                        <td><span class="p-column-title">Observación</span>{{audit.aud_observacion}}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+
+        <p-dialog [(visible)]="auditDialog" [style]="{width: '450px'}" header="Detalles de la Auditoría" [modal]="true"
+            class="p-fluid">
+            <ng-template pTemplate="content">
+                <div class="field">
+                    <label for="aud_usuario">Usuario</label>
+                    <input id="aud_usuario" type="text" pInputText [(ngModel)]="audit.aud_usuario" required autofocus />
+                    <div *ngIf="submitted && !audit.aud_usuario" class="p-error">El Usuario es obligatorio.</div>
+                </div>
+                <div class="field">
+                    <label for="aud_accion">Acción</label>
+                    <input id="aud_accion" type="text" pInputText [(ngModel)]="audit.aud_accion" required />
+                    <div *ngIf="submitted && !audit.aud_accion" class="p-error">La Acción es obligatoria.</div>
+                </div>
+                <div class="field">
+                    <label for="aud_modulo">Módulo</label>
+                    <input id="aud_modulo" type="text" pInputText [(ngModel)]="audit.aud_modulo" required />
+                    <div *ngIf="submitted && !audit.aud_modulo" class="p-error">El Módulo es obligatorio.</div>
+                </div>
+                <div class="field">
+                    <label for="aud_funcionalidad">Funcionalidad</label>
+                    <input id="aud_funcionalidad" type="text" pInputText [(ngModel)]="audit.aud_funcionalidad"
+                        required />
+                    <div *ngIf="submitted && !audit.aud_funcionalidad" class="p-error">La Funcionalidad es obligatoria.
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="aud_observacion">Observación</label>
+                    <textarea id="aud_observacion" pInputTextarea [(ngModel)]="audit.aud_observacion"
+                        required></textarea>
+                    <div *ngIf="submitted && !audit.aud_observacion" class="p-error">La Observación es obligatoria.
+                    </div>
+                </div>
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text"
+                    (click)="hideDialog()"></button>
+                <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text"
+                    (click)="saveAudit()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="deleteAuditDialog" [style]="{width: '450px'}" header="Confirmar" [modal]="true">
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="No" icon="pi pi-times" class="p-button-text"
+                    (click)="deleteAuditDialog = false"></button>
+                <button pButton pRipple label="Sí" icon="pi pi-check" class="p-button-text"
+                    (click)="confirmDelete()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="deleteAuditsDialog" [style]="{width: '450px'}" header="Confirmar" [modal]="true">
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="No" icon="pi pi-times" class="p-button-text"
+                    (click)="deleteAuditsDialog = false"></button>
+                <button pButton pRipple label="Sí" icon="pi pi-check" class="p-button-text"
+                    (click)="confirmDeleteSelected()"></button>
+            </ng-template>
+        </p-dialog>
+    </div>
+</div>
