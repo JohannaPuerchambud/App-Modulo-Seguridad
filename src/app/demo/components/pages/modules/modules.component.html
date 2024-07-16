@@ -1,0 +1,95 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <p-toast></p-toast>
+            <p-toolbar styleClass="mb-4">
+                <ng-template pTemplate="left">
+                    <div class="my-2">
+                        <button pButton pRipple label="Nuevo" icon="pi pi-plus" class="p-button-success mr-2"
+                            (click)="openNew()"></button>
+                    </div>
+                </ng-template>
+
+                <ng-template pTemplate="right">
+                    <button pButton pRipple label="Exportar" icon="pi pi-upload" class="p-button-help"
+                        (click)="dt.exportCSV()"></button>
+                </ng-template>
+            </p-toolbar>
+
+            <p-table #dt [value]="modules" [columns]="cols" responsiveLayout="scroll" [rows]="10"
+                [globalFilterFields]="['mod_name', 'mod_state']" [paginator]="true" [rowsPerPageOptions]="rowsPerPageOptions"
+                [showCurrentPageReport]="true" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+                [(selection)]="selectedModules" selectionMode="multiple" [rowHover]="true" dataKey="mod_id">
+                <ng-template pTemplate="caption">
+                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                        <h5 class="m-0">Módulos</h5>
+                        <span class="block mt-2 md:mt-0 p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Buscar..."
+                                class="w-full sm:w-auto" />
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th pSortableColumn="mod_id">ID <p-sortIcon field="mod_id"></p-sortIcon></th>
+                        <th pSortableColumn="mod_name">Nombre <p-sortIcon field="mod_name"></p-sortIcon></th>
+                        <th pSortableColumn="mod_state">Estado <p-sortIcon field="mod_state"></p-sortIcon></th>
+                        <th>Acciones</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-module>
+                    <tr>
+                        <td><span class="p-column-title">ID</span>{{module.mod_id}}</td>
+                        <td><span class="p-column-title">Nombre</span>{{module.mod_name}}</td>
+                        <td><span class="p-column-title">Estado</span>{{module.mod_state}}</td>
+                        <td>
+                            <div class="flex">
+                                <button pButton pRipple icon="pi pi-pencil"
+                                    class="p-button-rounded p-button-success mr-2" (click)="editModule(module)"></button>
+                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
+                                    (click)="deleteModule(module)"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+
+        <p-dialog [(visible)]="moduleDialog" [style]="{width: '450px'}" header="Detalles del Módulo" [modal]="true"
+            class="p-fluid">
+            <ng-template pTemplate="content">
+                <div class="field">
+                    <label for="mod_name">Nombre</label>
+                    <input type="text" pInputText id="mod_name" [(ngModel)]="module.mod_name" required
+                        autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !module.mod_name}" />
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !module.mod_name">Nombre es requerido.</small>
+                </div>
+                <div class="field">
+                    <label for="mod_state">Estado</label>
+                    <input type="text" pInputText id="mod_state" [(ngModel)]="module.mod_state" required
+                        [ngClass]="{'ng-invalid ng-dirty' : submitted && !module.mod_state}" />
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !module.mod_state">Estado es requerido.</small>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text"
+                    (click)="hideDialog()"></button>
+                <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text"
+                    (click)="saveModule()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="deleteModuleDialog" header="Confirmar" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span *ngIf="module">¿Está seguro de que desea eliminar el módulo <b>{{module.mod_name}}</b>?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
+                    (click)="deleteModuleDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Sí" (click)="confirmDelete()"></button>
+            </ng-template>
+        </p-dialog>
+    </div>
+</div>

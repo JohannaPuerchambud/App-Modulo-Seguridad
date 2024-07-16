@@ -7,7 +7,7 @@ import { LayoutService } from 'src/app/layout/service/app.layout.service';
     styles: [`
         :host ::ng-deep .pi-eye,
         :host ::ng-deep .pi-eye-slash {
-            transform:scale(1.6);
+            transform: scale(1.6);
             margin-right: 1rem;
             color: var(--primary-color) !important;
         }
@@ -16,8 +16,15 @@ import { LayoutService } from 'src/app/layout/service/app.layout.service';
 export class LoginComponent {
 
     valCheck: string[] = ['remember'];
-
     password!: string;
+    selectedModule: any;
+    modules: any[];
 
-    constructor(public layoutService: LayoutService) { }
+    constructor(public layoutService: LayoutService) {
+        this.modules = [
+            { label: 'Módulo 1', value: 'modulo1' },
+            { label: 'Módulo 2', value: 'modulo2' },
+            { label: 'Módulo 3', value: 'modulo3' }
+        ];
+    }
 }

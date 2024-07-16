@@ -74,9 +74,7 @@
                 </div>
                 <div class="field">
                     <label for="rol_description">Descripción</label>
-                    <input type="text" pInputText id="rol_description" [(ngModel)]="role.rol_description" required
-                        [ngClass]="{'ng-invalid ng-dirty' : submitted && !role.rol_description}" />
-                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !role.rol_description">Descripción es requer
+                    <input type="text" pInputText id="rol_description" [(ngModel)]="role.rol_description" />
                 </div>
                 <div class="field">
                     <label for="rol_allowed_users">Usuarios Permitidos</label>

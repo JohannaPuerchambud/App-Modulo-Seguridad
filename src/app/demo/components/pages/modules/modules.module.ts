@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { UsersRoutingModule } from './users-routing.module';
-import { UsersComponent } from './users.component';
+import { ModulesRoutingModule } from './modules-routing.module';
+import { ModulesComponent } from './modules.component';
 import { TableModule } from 'primeng/table';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ButtonModule } from 'primeng/button';
@@ -20,7 +20,7 @@ import { DialogModule } from 'primeng/dialog';
 @NgModule({
     imports: [
         CommonModule,
-        UsersRoutingModule,
+        ModulesRoutingModule,
         TableModule,
         FileUploadModule,
         FormsModule,
@@ -36,6 +36,6 @@ import { DialogModule } from 'primeng/dialog';
         InputNumberModule,
         DialogModule
     ],
-    declarations: [UsersComponent]
+    declarations: [ModulesComponent]
 }) 
-export class UsersModule { }
+export class ModulesModule { }

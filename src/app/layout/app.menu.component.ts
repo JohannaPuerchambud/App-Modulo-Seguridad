@@ -17,11 +17,11 @@ export class AppMenuComponent implements OnInit {
             {
                 label: 'Home',
                 items: [
-                    { label: 'Usuarios', icon: 'pi pi-fw pi-users', routerLink: ['/pages/users'] }, // Cambiado a 'pi-users'
-                    { label: 'Roles', icon: 'pi pi-fw pi-shield', routerLink: ['/pages/roles'] }, // Cambiado a 'pi-shield'
-                    { label: 'Funciones', icon: 'pi pi-fw pi-briefcase', routerLink: ['/pages/functions'] }, // Cambiado a 'pi-briefcase'
-                    { label: 'Módulos', icon: 'pi pi-fw pi-cog', routerLink: ['/pages/modules'] }, // Cambiado a 'pi-cog'
-                    { label: 'Auditoría', icon: 'pi pi-fw pi-search', routerLink: ['/pages/audit'] } // Cambiado a 'pi-search'
+                    { label: 'Usuarios', icon: 'pi pi-fw pi-users', routerLink: ['/pages/users'] }, 
+                    { label: 'Roles', icon: 'pi pi-fw pi-shield', routerLink: ['/pages/roles'] }, 
+                    { label: 'Funciones', icon: 'pi pi-fw pi-briefcase', routerLink: ['/pages/functions'] }, 
+                    { label: 'Módulos', icon: 'pi pi-fw pi-cog', routerLink: ['/pages/modules'] }, 
+                    { label: 'Auditoría', icon: 'pi pi-fw pi-search', routerLink: ['/pages/audit'] } 
                 ]                
             },
         ];
