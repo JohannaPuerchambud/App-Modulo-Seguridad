@@ -39,6 +39,7 @@ export class AuditComponent implements OnInit {
     getAudit() {
         this.auditApiService.getAudit().subscribe(
             (data: any) => {
+                console.log('Datos recibidos: ', data);
                 this.audits = data.auditoria; // Asegúrate de que 'data.auditoria' contiene el array de auditorías
             },
             (error: any) => {

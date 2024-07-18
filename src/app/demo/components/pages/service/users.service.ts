@@ -23,11 +23,11 @@ export class UsersApiService {
     return this.api.post(this.url + "/api/users", user);
   }
 
-  updateUser(id: string, user: any): Observable<any> {
+  updateUserById(id: string, user: any): Observable<any> {
     return this.api.put(this.url + `/api/users/${id}`, user);
   }
 
-  deleteUser(id: string): Observable<any> {
+  deleteUserById(id: string): Observable<any> {
     return this.api.delete(this.url + `/api/users/${id}`);
   }
 }

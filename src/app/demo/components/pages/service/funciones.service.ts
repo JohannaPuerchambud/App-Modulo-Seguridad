@@ -1,18 +1,29 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http'
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-
 export class FuncionesApiService {
 
-  url: string = 'https://api-modulo-seguridad.onrender.com';
+  private url: string = 'https://api-modulo-seguridad.onrender.com/api/functions';
 
-  constructor(private api: HttpClient) {}
+  constructor(private http: HttpClient) {}
 
-  getFunciones(): Observable<any> {
-    return this.api.get(this.url + "/api/functions");
+  getFunciones(): Observable<any[]> {
+    return this.http.get<any[]>(this.url);
+  }
+
+  createFuncion(func: any): Observable<any> {
+    return this.http.post<any>(this.url, func);
+  }
+
+  updateFuncion(funcId: string, func: any): Observable<any> {
+    return this.http.put<any>(`${this.url}/${funcId}`, func);
+  }
+
+  deleteFuncion(funcId: string): Observable<any> {
+    return this.http.delete<any>(`${this.url}/${funcId}`);
   }
 }

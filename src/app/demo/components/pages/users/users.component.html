@@ -66,6 +66,11 @@
             class="p-fluid">
             <ng-template pTemplate="content">
                 <div class="field">
+                    <label for="usr_id">ID</label>
+                    <input type="text" pInputText id="usr_id" [(ngModel)]="user.usr_id"/>
+                    <!-- Utiliza readonly si el campo no debe ser editable -->
+                </div>
+                <div class="field">
                     <label for="usr_first_name">Primer Nombre</label>
                     <input type="text" pInputText id="usr_first_name" [(ngModel)]="user.usr_first_name" required
                         autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !user.usr_first_name}" />
@@ -113,7 +118,8 @@
                 </div>
                 <div class="field">
                     <label for="usr_state">Estado</label>
-                    <input type="text" pInputText id="usr_state" [(ngModel)]="user.usr_state" />
+                    <p-dropdown [options]="statuses" [(ngModel)]="user.usr_state" optionLabel="label"
+                        optionValue="value"></p-dropdown>
                 </div>
             </ng-template>
             <ng-template pTemplate="footer">
@@ -130,8 +136,10 @@
                 <span *ngIf="user">¿Está seguro de que desea eliminar a <b>{{user.usr_full_name}}</b>?</span>
             </div>
             <ng-template pTemplate="footer">
-                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="deleteUserDialog = false"></button>
-                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Sí" (click)="confirmDelete()"></button>
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
+                    (click)="deleteUserDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Sí"
+                    (click)="confirmDelete()"></button>
             </ng-template>
         </p-dialog>
     </div>

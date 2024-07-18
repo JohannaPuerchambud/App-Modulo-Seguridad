@@ -40,6 +40,7 @@ export class ModulesComponent implements OnInit {
     getModules() {
         this.modulesApiService.getModules().subscribe(
             (data: any) => {
+                console.log('Datos recibidos: ', data);
                 this.modules = data; // Assuming 'data' directly contains the array of modules
             },
             (error: any) => {

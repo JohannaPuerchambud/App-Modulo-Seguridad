@@ -18,7 +18,7 @@ export class RolesComponent implements OnInit {
     selectedRoles: any[] = [];
     submitted: boolean = false;
 
-    cols: any[] = [ 
+    cols: any[] = [
         { field: 'rol_id', header: 'ID' },
         { field: 'rol_role', header: 'Rol' },
         { field: 'rol_description', header: 'Descripción' },
@@ -42,6 +42,7 @@ export class RolesComponent implements OnInit {
     getRoles() {
         this.rolesApiService.getRoles().subscribe(
             (data: any) => {
+                console.log('Datos recibidos: ', data);
                 this.roles = data.roles; // Asegúrate de que 'data.roles' contiene el array de roles
             },
             (error: any) => {
@@ -71,17 +72,26 @@ export class RolesComponent implements OnInit {
     }
 
     confirmDeleteSelected() {
-        this.deleteRolesDialog = false;
-        this.roles = this.roles.filter(val => !this.selectedRoles.includes(val));
-        this.messageService.add({ severity: 'success', summary: 'Exitoso', detail: 'Roles Eliminados', life: 3000 });
-        this.selectedRoles = [];
+        const deleteRequests = this.selectedRoles.map(role => this.rolesApiService.deleteRoleById(role.rol_id));
+        Promise.all(deleteRequests).then(() => {
+            this.roles = this.roles.filter(val => !this.selectedRoles.includes(val));
+            this.messageService.add({ severity: 'success', summary: 'Exitoso', detail: 'Roles Eliminados', life: 3000 });
+            this.selectedRoles = [];
+        }).catch(error => {
+            console.error('Error deleting selected roles: ', error);
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al eliminar los roles', life: 3000 });
+        });
     }
 
     confirmDelete() {
-        this.deleteRoleDialog = false;
-        this.roles = this.roles.filter(val => val.rol_id !== this.role.rol_id);
-        this.messageService.add({ severity: 'success', summary: 'Exitoso', detail: 'Rol Eliminado', life: 3000 });
-        this.role = {};
+        this.rolesApiService.deleteRoleById(this.role.rol_id).subscribe(() => {
+            this.roles = this.roles.filter(val => val.rol_id !== this.role.rol_id);
+            this.messageService.add({ severity: 'success', summary: 'Exitoso', detail: 'Rol Eliminado', life: 3000 });
+            this.role = {};
+        }, error => {
+            console.error('Error deleting role: ', error);
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al eliminar el rol', life: 3000 });
+        });
     }
 
     hideDialog() {
@@ -91,32 +101,46 @@ export class RolesComponent implements OnInit {
 
     saveRole() {
         this.submitted = true;
-
+    
         if (this.role.rol_role?.trim() && this.role.rol_description?.trim()) {
             if (this.role.rol_id) {
-                const index = this.findIndexById(this.role.rol_id);
-                if (index !== -1) {
-                    this.roles[index] = this.role;
-                    this.messageService.add({ severity: 'success', summary: 'Exitoso', detail: 'Rol Actualizado', life: 3000 });
-                }
+                this.rolesApiService.updateRoleById(this.role.rol_id, this.role).subscribe(
+                    updatedRole => {
+                        const index = this.findIndexById(this.role.rol_id);
+                        if (index !== -1) {
+                            this.roles[index] = updatedRole;
+                            this.messageService.add({ severity: 'success', summary: 'Exitoso', detail: 'Rol Actualizado', life: 3000 });
+                        }
+                        this.roles = [...this.roles];
+                        this.rolesDialog = false;
+                        this.role = {};
+                    },
+                    error => {
+                        console.error('Error updating role: ', error);
+                        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al actualizar el rol', life: 3000 });
+                    }
+                );
             } else {
-                this.role.rol_id = this.createId();
-                this.roles.push(this.role);
-                this.messageService.add({ severity: 'success', summary: 'Exitoso', detail: 'Rol Creado', life: 3000 });
+                this.rolesApiService.createRole(this.role).subscribe(
+                    newRole => {
+                        this.roles.push(newRole);
+                        this.messageService.add({ severity: 'success', summary: 'Exitoso', detail: 'Rol Creado', life: 3000 });
+                        this.roles = [...this.roles];
+                        this.rolesDialog = false;
+                        this.role = {};
+                    },
+                    error => {
+                        console.error('Error creating role: ', error);
+                        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al crear el rol', life: 3000 });
+                    }
+                );
             }
-
-            this.roles = [...this.roles];
-            this.rolesDialog = false;
-            this.role = {};
         }
     }
+    
 
     findIndexById(id: number): number {
         return this.roles.findIndex(role => role.rol_id === id);
-    }
-
-    createId(): number {
-        return Math.floor(Math.random() * 1000); // Replace with your actual ID creation logic
     }
 
     onGlobalFilter(table: Table, event: Event) {
