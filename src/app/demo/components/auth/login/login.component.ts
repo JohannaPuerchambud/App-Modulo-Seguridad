@@ -22,8 +22,8 @@ export class LoginComponent implements OnInit {
     selectedModule: string = '';
 
     constructor(
-        public layoutService: LayoutService, 
-        private loginService: LoginApiService, 
+        public layoutService: LayoutService,
+        private loginService: LoginApiService,
         private router: Router  // Añadir el Router aquí
     ) { }
 
@@ -40,8 +40,10 @@ export class LoginComponent implements OnInit {
             this.loginService.login(this.username, this.password, this.selectedModule).subscribe(
                 response => {
                     console.log('Login successful', response);
+                    // Guardar el nombre de usuario en el almacenamiento local
+                    localStorage.setItem('loggedInUser', this.username);
                     // Redirige al usuario después del login exitoso
-                    this.router.navigate(['/app']); // Redirige al layout principal
+                    this.router.navigate(['/pages/users']); // Redirige al layout principal
                 },
                 error => {
                     console.error('Login failed', error);

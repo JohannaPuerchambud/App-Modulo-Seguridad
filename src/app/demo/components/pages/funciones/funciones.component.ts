@@ -104,6 +104,7 @@ export class FuncionesComponent implements OnInit {
           },
           (error: any) => {
             console.error('Error updating function: ', error);
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al actualizar la función', life: 3000 });
           }
         );
       } else {
@@ -115,6 +116,7 @@ export class FuncionesComponent implements OnInit {
           },
           (error: any) => {
             console.error('Error creating function: ', error);
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al crear la función', life: 3000 });
           }
         );
       }

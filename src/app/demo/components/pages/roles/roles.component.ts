@@ -101,7 +101,7 @@ export class RolesComponent implements OnInit {
 
     saveRole() {
         this.submitted = true;
-    
+
         if (this.role.rol_role?.trim() && this.role.rol_description?.trim()) {
             if (this.role.rol_id) {
                 this.rolesApiService.updateRoleById(this.role.rol_id, this.role).subscribe(
@@ -111,9 +111,6 @@ export class RolesComponent implements OnInit {
                             this.roles[index] = updatedRole;
                             this.messageService.add({ severity: 'success', summary: 'Exitoso', detail: 'Rol Actualizado', life: 3000 });
                         }
-                        this.roles = [...this.roles];
-                        this.rolesDialog = false;
-                        this.role = {};
                     },
                     error => {
                         console.error('Error updating role: ', error);
@@ -125,9 +122,6 @@ export class RolesComponent implements OnInit {
                     newRole => {
                         this.roles.push(newRole);
                         this.messageService.add({ severity: 'success', summary: 'Exitoso', detail: 'Rol Creado', life: 3000 });
-                        this.roles = [...this.roles];
-                        this.rolesDialog = false;
-                        this.role = {};
                     },
                     error => {
                         console.error('Error creating role: ', error);
@@ -135,9 +129,12 @@ export class RolesComponent implements OnInit {
                     }
                 );
             }
+            this.roles = [...this.roles];
+            this.rolesDialog = false;
+            this.role = {};
         }
     }
-    
+
 
     findIndexById(id: number): number {
         return this.roles.findIndex(role => role.rol_id === id);

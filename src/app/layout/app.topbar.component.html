@@ -10,12 +10,11 @@
     <button #topbarmenubutton class="p-link layout-topbar-menu-button layout-topbar-button" (click)="layoutService.showProfileSidebar()">
         <i class="pi pi-ellipsis-v"></i>
     </button>
-    
 
     <div #topbarmenu class="layout-topbar-menu">
         <button class="p-link layout-topbar-button" (click)="toggleAuthMenu()">
             <i class="pi pi-user"></i>
-            <span>Profile</span>
+            <span>{{ loggedInUser }}</span>
         </button>
         <ul *ngIf="isAuthMenuVisible" class="layout-submenu">
             <li>
@@ -26,5 +25,4 @@
             </li>
         </ul>
     </div>    
-    
 </div>

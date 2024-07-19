@@ -1,0 +1,125 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <p-toast></p-toast>
+            <p-toolbar styleClass="mb-4">
+                <ng-template pTemplate="left">
+                    <div class="my-2">
+                        <button pButton pRipple label="Nuevo" icon="pi pi-plus" class="p-button-success mr-2"
+                            (click)="openNew()"></button>
+                    </div>
+                </ng-template>
+
+                <ng-template pTemplate="right">
+                    <button pButton pRipple label="Exportar" icon="pi pi-upload" class="p-button-help"
+                        (click)="dt.exportCSV()"></button>
+                </ng-template>
+            </p-toolbar>
+
+            <p-table #dt [value]="roleFunctions" [columns]="cols" responsiveLayout="scroll" [rows]="10"
+                [globalFilterFields]="['rol_func_id', 'rol_role', 'func_name', 'func_module', 'func_state_function']"
+                [paginator]="true" [rowsPerPageOptions]="rowsPerPageOptions" [showCurrentPageReport]="true"
+                currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+                [(selection)]="selectedRoleFunctions" selectionMode="multiple" [rowHover]="true" dataKey="rol_func_id">
+                <ng-template pTemplate="caption">
+                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                        <h5 class="m-0">Asignaciones de Función a Rol</h5>
+                        <span class="block mt-2 md:mt-0 p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Buscar..."
+                                class="w-full sm:w-auto" />
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th pSortableColumn="rol_func_id">ID <p-sortIcon field="rol_func_id"></p-sortIcon></th>
+                        <th pSortableColumn="rol_role">Rol ID <p-sortIcon field="rol_role"></p-sortIcon></th>
+                        <th pSortableColumn="rol_description">Descripción Rol <p-sortIcon
+                                field="rol_description"></p-sortIcon></th>
+                        <th pSortableColumn="func_name">Función <p-sortIcon field="func_name"></p-sortIcon></th>
+                        <th pSortableColumn="func_module">Módulo <p-sortIcon field="func_module"></p-sortIcon></th>
+                        <th pSortableColumn="func_state_function">Estado Función <p-sortIcon
+                                field="func_state_function"></p-sortIcon></th>
+                        <th pSortableColumn="rol_allowed_users">Usuarios Permitidos <p-sortIcon
+                                field="rol_allowed_users"></p-sortIcon></th>
+                        <th>Acciones</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-roleFunction>
+                    <tr>
+                        <td><span class="p-column-title">ID</span>{{roleFunction.rol_func_id}}</td>
+                        <td><span class="p-column-title">Rol ID</span>{{roleFunction.rol_role}}</td>
+                        <td><span class="p-column-title">Descripción Rol</span>{{roleFunction.rol_description}}</td>
+                        <td><span class="p-column-title">Función</span>{{roleFunction.func_name}}</td>
+                        <td><span class="p-column-title">Módulo</span>{{roleFunction.func_module}}</td>
+                        <td><span class="p-column-title">Estado Función</span>{{roleFunction.func_state_function}}</td>
+                        <td><span class="p-column-title">Usuarios Permitidos</span>{{roleFunction.rol_allowed_users}}
+                        </td>
+                        <td>
+                            <div class="flex">
+                                <button pButton pRipple icon="pi pi-pencil"
+                                    class="p-button-rounded p-button-success mr-2"
+                                    (click)="editRoleFunction(roleFunction)"></button>
+                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
+                                    (click)="deleteRoleFunction(roleFunction)"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+
+        <p-dialog [(visible)]="functionDialog" [style]="{width: '450px'}" header="Detalles de la Asignación de Función"
+            [modal]="true" class="p-fluid">
+            <ng-template pTemplate="content">
+                <div class="field">
+                    <label for="rol_func_role">Rol</label>
+                    <input id="rol_func_role" type="text" pInputText [(ngModel)]="roleFunction.rol_func_role" />
+                </div>
+                <div class="field">
+                    <label for="rol_func_function">Función</label>
+                    <input id="rol_func_function" type="text" pInputText [(ngModel)]="roleFunction.rol_func_function" />
+                </div>
+                <div class="field">
+                    <label for="rol_func_state">Estado</label>
+                    <p-dropdown [options]="statuses" [(ngModel)]="roleFunction.rol_func_state" optionLabel="label"
+                        optionValue="value"></p-dropdown>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text"
+                    (click)="hideDialog()"></button>
+                <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text"
+                    (click)="saveRoleFunction()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="deleteFunctionDialog" header="Confirmar" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span *ngIf="roleFunction">¿Está seguro de que desea eliminar la asignación de función con ID
+                    <b>{{roleFunction.rol_func_id}}</b>?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
+                    (click)="deleteFunctionDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Sí"
+                    (click)="confirmDelete()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="deleteFunctionsDialog" header="Confirmar" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span>¿Está seguro de que desea eliminar las asignaciones de función seleccionadas?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
+                    (click)="deleteFunctionsDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Sí"
+                    (click)="confirmDeleteSelected()"></button>
+            </ng-template>
+        </p-dialog>
+    </div>
+</div>
