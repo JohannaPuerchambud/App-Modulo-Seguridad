@@ -109,22 +109,7 @@ export class UsersComponent implements OnInit {
     saveUser() {
         this.submitted = true;
     
-        if (this.user.usr_first_name?.trim() && this.user.usr_user?.trim() && this.user.usr_email?.trim() && this.user.usr_password?.trim()) {
-            if (this.user.usr_id) {
-                // Edit existing user
-                this.usersApiService.updateUserById(this.user.usr_id, this.user).subscribe(updatedUser => {
-                    const index = this.findIndexById(this.user.usr_id);
-                    if (index !== -1) {
-                        this.users[index] = updatedUser; 
-                        this.messageService.add({ severity: 'success', summary: 'Exitoso', detail: 'Usuario Actualizado', life: 3000 });
-                    }
-                    this.userDialog = false;
-                    this.user = {};
-                }, error => {
-                    console.error('Error updating user: ', error);
-                    this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al actualizar el usuario', life: 3000 });
-                });
-            } else {
+       
                 // Create new user
                 console.log('Creating user with data:', this.user); // Log the user data before sending
                 this.usersApiService.createUser(this.user).subscribe(newUser => {
@@ -137,8 +122,8 @@ export class UsersComponent implements OnInit {
                     this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al crear el usuario', life: 3000 });
                 });
             }
-        }
-    }
+        
+    
     
 
     findIndexById(id: string): number {
