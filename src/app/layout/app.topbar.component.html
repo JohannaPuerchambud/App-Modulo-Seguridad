@@ -12,12 +12,15 @@
     </button>
 
     <div #topbarmenu class="layout-topbar-menu">
+        <i class="pi pi-user"></i>
+        <span>{{ loggedInUser }}</span>
         <button class="p-link layout-topbar-button" (click)="toggleAuthMenu()">
-            <i class="pi pi-user"></i>
-            <span>{{ loggedInUser }}</span>
+            <i class="pi pi-cog"></i>
+            <span>Opciones</span>
         </button>
         <ul *ngIf="isAuthMenuVisible" class="layout-submenu">
             <li>
+                
                 <a [routerLink]="['/auth/login']">
                     <i class="pi pi-fw pi-sign-in"></i>
                     <span>Cerrar sesión</span>
